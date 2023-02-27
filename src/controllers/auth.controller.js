@@ -51,13 +51,19 @@ const AuthController = {
 
             res.status(200).json({ token });
         } catch (error) {
-            const { message } = error;
+            let { message } = error;
             let status;
 
-            if (message.includes('password not match')) {
+            if (message.includes('not found')) {
+                status = 404
+            } else if (message.includes('password not match')) {
                 status = 400;
+            } else {
+                message = 'Internal server error'
+                status = 500;
             }
 
+            res.status(status).json({ message });
         }
     },
 }
